@@ -5,6 +5,9 @@ import { prisma } from '@/lib/prisma'
 import { writeFile } from 'fs/promises'
 import { join } from 'path'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const tweets = await prisma.tweet.findMany({

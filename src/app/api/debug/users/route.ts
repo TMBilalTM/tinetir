@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 // GET - Tüm kullanıcıları listele (test için)
 export async function GET() {
   try {
@@ -33,3 +36,4 @@ export async function GET() {
     )
   }
 }
+

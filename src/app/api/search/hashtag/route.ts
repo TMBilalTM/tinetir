@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 // GET - Hashtag ile tweet ara
 export async function GET(request: NextRequest) {
   try {
@@ -87,3 +90,4 @@ export async function GET(request: NextRequest) {
     )
   }
 }
+

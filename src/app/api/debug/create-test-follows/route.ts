@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 // GET - Test takip verisi oluştur
 export async function GET() {
   try {
@@ -71,3 +74,4 @@ export async function GET() {
     )
   }
 }
+

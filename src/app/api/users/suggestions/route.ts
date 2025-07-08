@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 // GET - Takip önerisi kullanıcıları getir
 export async function GET() {
   try {
@@ -77,3 +80,4 @@ export async function GET() {
     )
   }
 }
+
