@@ -9,6 +9,7 @@ import { ArrowLeft, Camera } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+
 interface UserProfile {
   id: string
   name: string | null
