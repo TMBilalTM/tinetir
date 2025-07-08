@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -98,23 +96,27 @@ export async function POST(request: NextRequest) {
       hashtags = JSON.parse(formData.get('hashtags') as string || '[]')
       mentions = JSON.parse(formData.get('mentions') as string || '[]')
       
-      // Media dosyalarını işle
+      // Media dosyalarını işle (Vercel uyumlu base64 formatında)
       const uploadedFiles = []
+      const maxSize = 2 * 1024 * 1024 // 2MB limit
+      
       for (let i = 0; formData.get(`media_${i}`); i++) {
         const file = formData.get(`media_${i}`) as File
         if (file && file.size > 0) {
           try {
+            // Dosya boyutu kontrolü
+            if (file.size > maxSize) {
+              console.error('Dosya çok büyük:', file.name)
+              continue
+            }
+            
             const bytes = await file.arrayBuffer()
             const buffer = Buffer.from(bytes)
+            const base64 = buffer.toString('base64')
+            const mimeType = file.type || 'image/jpeg'
+            const dataUrl = `data:${mimeType};base64,${base64}`
             
-            // Benzersiz dosya adı oluştur
-            const fileExtension = file.name.split('.').pop()
-            const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExtension}`
-            const filePath = join(process.cwd(), 'public', 'uploads', fileName)
-            
-            // Dosyayı kaydet
-            await writeFile(filePath, buffer)
-            uploadedFiles.push(`/uploads/${fileName}`)
+            uploadedFiles.push(dataUrl)
           } catch (error) {
             console.error('Dosya yükleme hatası:', error)
           }

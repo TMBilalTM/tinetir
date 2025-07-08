@@ -92,12 +92,31 @@ export default function TweetComposer() {
 
   const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
+    const maxSize = 2 * 1024 * 1024 // 2MB
+    
     files.forEach(file => {
       if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+        // Dosya boyutu kontrolü
+        if (file.size > maxSize) {
+          alert(`${file.name} dosyası 2MB'dan büyük olamaz`)
+          return
+        }
+        
+        // Maksimum 4 dosya kontrolü
+        if (mediaFiles.length >= 4) {
+          alert('En fazla 4 medya dosyası yükleyebilirsiniz')
+          return
+        }
+        
         const url = URL.createObjectURL(file)
         setMediaFiles(prev => [...prev, { file, url }])
       }
     })
+    
+    // Input'u temizle
+    if (e.target) {
+      e.target.value = ''
+    }
   }
 
   const removeMedia = (index: number) => {
@@ -240,7 +259,7 @@ export default function TweetComposer() {
                 type="file"
                 ref={fileInputRef}
                 onChange={handleMediaUpload}
-                accept="image/*,video/*"
+                accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm"
                 multiple
                 className="hidden"
               />
