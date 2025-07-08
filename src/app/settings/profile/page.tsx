@@ -81,6 +81,13 @@ export default function EditProfilePage() {
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // Dosya boyutu kontrolü (2MB)
+      const maxSize = 2 * 1024 * 1024
+      if (file.size > maxSize) {
+        alert('Profil resmi 2MB\'dan büyük olamaz')
+        return
+      }
+      
       setProfileImage(file)
       const reader = new FileReader()
       reader.onload = () => setProfileImagePreview(reader.result as string)
@@ -92,6 +99,13 @@ export default function EditProfilePage() {
   const handleBannerImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      // Dosya boyutu kontrolü (2MB)
+      const maxSize = 2 * 1024 * 1024
+      if (file.size > maxSize) {
+        alert('Banner resmi 2MB\'dan büyük olamaz')
+        return
+      }
+      
       setBannerImage(file)
       const reader = new FileReader()
       reader.onload = () => setBannerImagePreview(reader.result as string)
@@ -208,7 +222,7 @@ export default function EditProfilePage() {
               <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/jpg,image/png,image/webp"
                   onChange={handleBannerImageChange}
                   className="hidden"
                   id="banner-upload"
@@ -216,6 +230,7 @@ export default function EditProfilePage() {
                 <label
                   htmlFor="banner-upload"
                   className="bg-black bg-opacity-60 p-3 rounded-full hover:bg-opacity-80 transition-colors cursor-pointer"
+                  title="Banner fotoğrafı yükle (Max 2MB)"
                 >
                   <Camera className="w-6 h-6" />
                 </label>
@@ -239,7 +254,7 @@ export default function EditProfilePage() {
                 <div className="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center">
                   <input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg,image/jpg,image/png,image/webp"
                     onChange={handleProfileImageChange}
                     className="hidden"
                     id="profile-upload"
@@ -247,6 +262,7 @@ export default function EditProfilePage() {
                   <label
                     htmlFor="profile-upload"
                     className="bg-black bg-opacity-60 p-2 rounded-full hover:bg-opacity-80 transition-colors cursor-pointer"
+                    title="Profil fotoğrafı yükle (Max 2MB)"
                   >
                     <Camera className="w-4 h-4" />
                   </label>

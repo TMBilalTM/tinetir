@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -101,32 +99,38 @@ export async function PUT(request: NextRequest) {
     let profileImageUrl: string | undefined
     let bannerImageUrl: string | undefined
 
+    // Vercel'de dosya sistemi sınırlı olduğu için, şimdilik base64 formatında saklayalım
+    // Büyük dosyalar için boyut sınırı koyalım (2MB)
+    const maxSize = 2 * 1024 * 1024 // 2MB
+
     if (profileImage && profileImage.size > 0) {
+      if (profileImage.size > maxSize) {
+        return NextResponse.json(
+          { error: 'Profil resmi 2MB\'dan büyük olamaz' },
+          { status: 400 }
+        )
+      }
+      
       const bytes = await profileImage.arrayBuffer()
       const buffer = Buffer.from(bytes)
-      
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'profiles')
-      await mkdir(uploadsDir, { recursive: true })
-      
-      const filename = `profile_${session.user.id}_${Date.now()}.${profileImage.name.split('.').pop()}`
-      const filepath = path.join(uploadsDir, filename)
-      await writeFile(filepath, buffer)
-      
-      profileImageUrl = `/uploads/profiles/${filename}`
+      const base64 = buffer.toString('base64')
+      const mimeType = profileImage.type || 'image/jpeg'
+      profileImageUrl = `data:${mimeType};base64,${base64}`
     }
 
     if (bannerImage && bannerImage.size > 0) {
+      if (bannerImage.size > maxSize) {
+        return NextResponse.json(
+          { error: 'Banner resmi 2MB\'dan büyük olamaz' },
+          { status: 400 }
+        )
+      }
+      
       const bytes = await bannerImage.arrayBuffer()
       const buffer = Buffer.from(bytes)
-      
-      const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'banners')
-      await mkdir(uploadsDir, { recursive: true })
-      
-      const filename = `banner_${session.user.id}_${Date.now()}.${bannerImage.name.split('.').pop()}`
-      const filepath = path.join(uploadsDir, filename)
-      await writeFile(filepath, buffer)
-      
-      bannerImageUrl = `/uploads/banners/${filename}`
+      const base64 = buffer.toString('base64')
+      const mimeType = bannerImage.type || 'image/jpeg'
+      bannerImageUrl = `data:${mimeType};base64,${base64}`
     }
 
     // Profil güncelleme
