@@ -1,0 +1,50 @@
+/* Custom Swiper Styles for Tweet Images */
+
+.swiper-pagination {
+  bottom: 8px !important;
+}
+
+.swiper-pagination-bullet {
+  background-color: rgba(255, 255, 255, 0.6) !important;
+  opacity: 1 !important;
+  width: 8px !important;
+  height: 8px !important;
+  margin: 0 3px !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #1d9bf0 !important;
+}
+
+/* Hide default navigation buttons */
+.swiper-button-next,
+.swiper-button-prev {
+  display: none !important;
+}
+
+/* Custom hover effects for tweet carousel */
+.group:hover .swiper-button-prev-custom,
+.group:hover .swiper-button-next-custom {
+  opacity: 1 !important;
+}
+
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+/* Swiper container styling */
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
