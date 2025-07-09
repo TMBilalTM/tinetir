@@ -227,25 +227,37 @@ export default function ProfilePageClient({ username }: ProfilePageClientProps) 
     <TweetProvider>
       <TwitterLayout>
         <div className="border-x-0 lg:border-x border-border min-h-screen">
-          {/* Header */}
-          <div className="sticky top-0 bg-black/80 backdrop-blur-md border-b border-border p-4 z-10">
-            <div className="flex items-center space-x-4">
+          {/* Modern Header */}
+          <div className="sticky top-0 bg-background/80 backdrop-blur-xl border-b border-border/50 z-10">
+            <div className="flex items-center space-x-4 p-6">
               <Link 
                 href="/"
-                className="hover:bg-gray-800 p-2 rounded-full transition-colors"
+                className="hover:bg-surface/50 p-3 rounded-2xl transition-all hover:scale-105 active:scale-95"
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="w-5 h-5 text-foreground" />
               </Link>
               <div className="flex-1">
-                <h1 className="text-xl font-bold">{user.name || 'Adsız Kullanıcı'}</h1>
-                <p className="text-muted text-sm">{user._count.tweets} Tweet</p>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-foreground">{user.name || 'Adsız Kullanıcı'}</h1>
+                  {user.verified && (
+                    <div className="w-6 h-6 bg-accent rounded-xl flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">✓</span>
+                    </div>
+                  )}
+                  {user.badges && user.badges.length > 0 && (
+                    <BadgeList badges={user.badges} size="sm" />
+                  )}
+                </div>
+                <p className="text-muted-foreground text-sm font-medium">
+                  {user._count.tweets.toLocaleString()} Tweet • {user._count.followers.toLocaleString()} Takipçi
+                </p>
               </div>
               <div className="relative">
                 <button 
                   onClick={() => setShowAdminMenu(!showAdminMenu)}
-                  className="hover:bg-gray-800 p-2 rounded-full transition-colors"
+                  className="hover:bg-surface/50 p-3 rounded-2xl transition-all hover:scale-105 active:scale-95"
                 >
-                  <MoreHorizontal className="w-5 h-5" />
+                  <MoreHorizontal className="w-5 h-5 text-muted-foreground" />
                 </button>
                 
                 {showAdminMenu && session?.user?.isAdmin && (

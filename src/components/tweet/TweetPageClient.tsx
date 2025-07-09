@@ -41,29 +41,30 @@ export default function TweetPageClient({ tweet }: TweetPageClientProps) {
 
   return (
     <TwitterLayout>
-      <div className="border-x-0 lg:border-x border-border min-h-screen">
-        {/* Header */}
-        <div className="sticky top-0 bg-black/80 backdrop-blur-md border-b border-border p-4 z-10">
+      <div className="border-x-0 lg:border-x border-gray-200 dark:border-gray-700 min-h-screen bg-white dark:bg-gray-900">
+        {/* Modern Header */}
+        <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 p-6 z-10">
           <div className="flex items-center space-x-4">
             <Link 
               href="/"
-              className="hover:bg-gray-800 p-2 rounded-full transition-colors"
+              className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-xl transition-colors"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
             </Link>
             <div>
-              <h1 className="text-xl font-bold">Tweet</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Tweet</h1>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Detaylar ve yanıtlar</p>
             </div>
           </div>
         </div>
 
-        {/* Tweet */}
-        <div className="border-b border-border">
+        {/* Tweet - Enhanced styling */}
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
           <TweetItem tweet={tweet} />
         </div>
 
-        {/* Yanıtlar Bölümü */}
-        <div className="border-b border-border">
+        {/* Reply Section */}
+        <div className="border-b border-gray-200 dark:border-gray-700">
           <ReplyComposer 
             tweetId={tweet.id} 
             placeholder="Bu tweet'e yanıt yazın..."
@@ -71,8 +72,8 @@ export default function TweetPageClient({ tweet }: TweetPageClientProps) {
           />
         </div>
         
-        {/* Yanıtlar Listesi */}
-        <div>
+        {/* Replies List */}
+        <div className="bg-white dark:bg-gray-900">
           <ReplyList 
             tweetId={tweet.id} 
             refreshTrigger={replyRefresh}

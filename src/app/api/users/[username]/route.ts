@@ -12,35 +12,41 @@ export async function GET(
   try {
     const { username } = await params
 
-    const user = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { username: username },
-          { id: username }, // ID ile de arama yapabilir
-        ],
-      },
-      select: {
-        id: true,
-        name: true,
-        username: true,
-        email: true,
-        image: true,
-        banner: true,
-        bio: true,
-        location: true,
-        website: true,
-        verified: true,
-        badges: true,
-        createdAt: true,
-        _count: {
-          select: {
-            tweets: true,
-            followers: true,
-            following: true,
+    // Timeout ile sorgu
+    const user = await Promise.race([
+      prisma.user.findFirst({
+        where: {
+          OR: [
+            { username: username },
+            { id: username }, // ID ile de arama yapabilir
+          ],
+        },
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          email: true,
+          image: true,
+          banner: true,
+          bio: true,
+          location: true,
+          website: true,
+          verified: true,
+          badges: true,
+          createdAt: true,
+          _count: {
+            select: {
+              tweets: true,
+              followers: true,
+              following: true,
+            },
           },
         },
-      },
-    })
+      }),
+      new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database timeout')), 5000)
+      )
+    ]) as any
 
     if (!user) {
       return NextResponse.json(

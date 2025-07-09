@@ -86,29 +86,29 @@ export default function FollowModal({ isOpen, onClose, userId, type, title }: Fo
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-gray-900 rounded-xl w-full max-w-md max-h-[80vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md rounded-2xl w-full max-w-md max-h-[80vh] flex flex-col shadow-xl border border-gray-200/20 dark:border-gray-700/20">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold text-white">{title}</h2>
+        <div className="flex items-center justify-between p-6 border-b border-gray-200/20 dark:border-gray-700/20">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition-colors p-1"
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white transition-colors p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Search */}
-        <div className="p-4 border-b border-gray-700">
+        <div className="p-6 border-b border-gray-200/20 dark:border-gray-700/20">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               placeholder="Kullanıcı ara..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             />
           </div>
         </div>
@@ -117,19 +117,22 @@ export default function FollowModal({ isOpen, onClose, userId, type, title }: Fo
         <div className="flex-1 overflow-y-auto">
           {loading ? (
             <div className="p-8 text-center">
-              <p className="text-gray-400">Yükleniyor...</p>
+              <div className="animate-pulse">
+                <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-3"></div>
+                <p className="text-gray-500 dark:text-gray-400">Yükleniyor...</p>
+              </div>
             </div>
           ) : filteredUsers.length > 0 ? (
-            <div className="p-4 space-y-3">
+            <div className="p-6 space-y-3">
               {filteredUsers.map((user) => (
                 <Link
                   key={user.id}
                   href={`/${user.username || user.id}`}
                   onClick={onClose}
-                  className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-800 transition-colors group"
+                  className="flex items-center space-x-4 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all group"
                 >
                   {/* Avatar */}
-                  <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                  <div className="w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
                     {user.image ? (
                       <Image 
                         src={user.image} 
@@ -146,7 +149,7 @@ export default function FollowModal({ isOpen, onClose, userId, type, title }: Fo
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center space-x-2">
-                      <h3 className="font-bold text-white truncate group-hover:text-blue-400 transition-colors">
+                      <h3 className="font-semibold text-gray-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                         {user.name || 'Adsız Kullanıcı'}
                       </h3>
                       {user.badges && user.badges.length > 0 && (
@@ -158,11 +161,11 @@ export default function FollowModal({ isOpen, onClose, userId, type, title }: Fo
                         </div>
                       )}
                     </div>
-                    <p className="text-gray-400 text-sm truncate">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm truncate">
                       @{user.username || user.id.slice(0, 8)}
                     </p>
                     {user.bio && (
-                      <p className="text-gray-300 text-sm mt-1 truncate">
+                      <p className="text-gray-600 dark:text-gray-300 text-sm mt-1 line-clamp-2">
                         {user.bio}
                       </p>
                     )}
@@ -172,7 +175,10 @@ export default function FollowModal({ isOpen, onClose, userId, type, title }: Fo
             </div>
           ) : (
             <div className="p-8 text-center">
-              <p className="text-gray-400">
+              <div className="mb-4">
+                <User className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto" />
+              </div>
+              <p className="text-gray-500 dark:text-gray-400">
                 {searchQuery 
                   ? 'Arama sonucu bulunamadı' 
                   : `Henüz hiç ${type === 'followers' ? 'takipçi' : 'takip edilen'} yok`

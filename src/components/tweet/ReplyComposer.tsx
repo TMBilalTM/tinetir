@@ -65,18 +65,18 @@ export default function ReplyComposer({
 
   if (!session?.user) {
     return (
-      <div className={`${compact ? 'p-3' : 'p-4'} text-center text-muted border-b border-border`}>
-        <p>Yanıt yapmak için giriş yapın</p>
+      <div className={`${compact ? 'p-4' : 'p-6'} text-center bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-700`}>
+        <p className="text-gray-600 dark:text-gray-400">Yanıt yapmak için giriş yapın</p>
       </div>
     )
   }
 
   return (
-    <div className={`border-b border-border ${compact ? 'p-3' : 'p-4'}`}>
+    <div className={`border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 ${compact ? 'p-4' : 'p-6'}`}>
       <form onSubmit={handleSubmit}>
-        <div className="flex space-x-3">
+        <div className="flex space-x-4">
           {/* User Avatar */}
-          <div className={`${compact ? 'w-8 h-8' : 'w-10 h-10'} bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0`}>
+          <div className={`${compact ? 'w-8 h-8' : 'w-10 h-10'} bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0`}>
             {session.user.image ? (
               <Image 
                 src={session.user.image} 
@@ -86,7 +86,7 @@ export default function ReplyComposer({
                 className="w-full h-full rounded-full object-cover"
               />
             ) : (
-              <User className={`${compact ? 'w-3 h-3' : 'w-4 h-4'}`} />
+              <User className={`${compact ? 'w-3 h-3' : 'w-4 h-4'} text-gray-400`} />
             )}
           </div>
 
@@ -97,15 +97,15 @@ export default function ReplyComposer({
               onChange={(e) => setContent(e.target.value)}
               placeholder={placeholder}
               disabled={isLoading}
-              className={`w-full bg-transparent border-none outline-none resize-none text-foreground placeholder-muted ${
+              className={`w-full bg-transparent border-none outline-none resize-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
                 compact ? 'text-sm min-h-[60px]' : 'text-base min-h-[80px]'
               }`}
               maxLength={280}
             />
             
-            <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center justify-between mt-3">
               {/* Character Count */}
-              <div className={`${compact ? 'text-xs' : 'text-sm'} ${content.length > 260 ? 'text-red-500' : 'text-muted'}`}>
+              <div className={`${compact ? 'text-xs' : 'text-sm'} ${content.length > 260 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}`}>
                 {content.length}/280
               </div>
 
@@ -113,8 +113,8 @@ export default function ReplyComposer({
               <button
                 type="submit"
                 disabled={!content.trim() || isLoading || content.length > 280}
-                className={`bg-accent hover:bg-accent-hover disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-full transition-colors flex items-center space-x-2 ${
-                  compact ? 'px-3 py-1 text-sm' : 'px-4 py-2'
+                className={`bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center space-x-2 ${
+                  compact ? 'px-4 py-2 text-sm' : 'px-6 py-2.5'
                 }`}
               >
                 <Send className={`${compact ? 'w-3 h-3' : 'w-4 h-4'}`} />

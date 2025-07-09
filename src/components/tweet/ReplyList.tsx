@@ -73,16 +73,24 @@ export default function ReplyList({ tweetId, refreshTrigger }: ReplyListProps) {
 
   if (isLoading) {
     return (
-      <div className="p-4 text-center text-muted">
-        <p>Yanıtlar yükleniyor...</p>
+      <div className="p-6 text-center">
+        <div className="animate-pulse">
+          <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-3"></div>
+          <p className="text-gray-500 dark:text-gray-400">Yanıtlar yükleniyor...</p>
+        </div>
       </div>
     )
   }
 
   if (replies.length === 0) {
     return (
-      <div className="p-4 text-center text-muted">
-        <p>Henüz yanıt yok. İlk yanıtı siz yazın!</p>
+      <div className="p-6 text-center">
+        <div className="mb-4">
+          <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full mx-auto flex items-center justify-center">
+            <User className="w-6 h-6 text-gray-400" />
+          </div>
+        </div>
+        <p className="text-gray-500 dark:text-gray-400">Henüz yanıt yok. İlk yanıtı siz yazın!</p>
       </div>
     )
   }
@@ -90,11 +98,11 @@ export default function ReplyList({ tweetId, refreshTrigger }: ReplyListProps) {
   return (
     <div>
       {replies.map((reply) => (
-        <div key={reply.id} className="border-b border-border p-4 hover:bg-gray-950/50 transition-colors">
-          <div className="flex space-x-3">
+        <div key={reply.id} className="border-b border-gray-200 dark:border-gray-700 p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+          <div className="flex space-x-4">
             {/* User Avatar */}
             <Link href={`/${reply.user.username || reply.user.id.slice(0, 8)}`}>
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 bg-gray-200 dark:bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity">
                 {reply.user.image ? (
                   <Image 
                     src={reply.user.image} 
@@ -104,7 +112,7 @@ export default function ReplyList({ tweetId, refreshTrigger }: ReplyListProps) {
                     className="w-full h-full rounded-full object-cover"
                   />
                 ) : (
-                  <User className="w-3 h-3" />
+                  <User className="w-3 h-3 text-gray-400" />
                 )}
               </div>
             </Link>
@@ -112,21 +120,21 @@ export default function ReplyList({ tweetId, refreshTrigger }: ReplyListProps) {
             {/* Reply Content */}
             <div className="flex-1 min-w-0">
               {/* User Info */}
-              <div className="flex items-center space-x-2 mb-1">
+              <div className="flex items-center space-x-2 mb-2">
                 <Link 
                   href={`/${reply.user.username || reply.user.id.slice(0, 8)}`}
-                  className="font-semibold text-sm truncate hover:underline"
+                  className="font-semibold text-sm text-gray-900 dark:text-white truncate hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   {reply.user.name || 'Adsız Kullanıcı'}
                 </Link>
                 <Link 
                   href={`/${reply.user.username || reply.user.id.slice(0, 8)}`}
-                  className="text-muted text-xs truncate hover:underline"
+                  className="text-gray-500 dark:text-gray-400 text-xs truncate hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                 >
                   @{reply.user.username || reply.user.id.slice(0, 8)}
                 </Link>
-                <span className="text-muted text-xs">·</span>
-                <span className="text-muted text-xs">
+                <span className="text-gray-400 text-xs">·</span>
+                <span className="text-gray-500 dark:text-gray-400 text-xs">
                   {formatDistanceToNow(new Date(reply.createdAt), { 
                     addSuffix: true, 
                     locale: tr 
@@ -139,7 +147,7 @@ export default function ReplyList({ tweetId, refreshTrigger }: ReplyListProps) {
                     <button
                       onClick={() => handleDeleteReply(reply.id)}
                       disabled={deletingReplyId === reply.id}
-                      className="hover:bg-gray-800 p-1 rounded-full transition-colors text-red-500"
+                      className="hover:bg-red-50 dark:hover:bg-red-900/20 p-2 rounded-full transition-colors text-red-500 hover:text-red-600"
                       title="Yanıtı sil"
                     >
                       {deletingReplyId === reply.id ? (
@@ -154,7 +162,7 @@ export default function ReplyList({ tweetId, refreshTrigger }: ReplyListProps) {
 
               {/* Reply Text */}
               <div className="mb-2">
-                <p className="text-sm whitespace-pre-wrap break-words">
+                <p className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap break-words leading-relaxed">
                   {reply.content}
                 </p>
               </div>

@@ -161,9 +161,12 @@ export default function EditProfilePage() {
     return (
       <TweetProvider>
         <TwitterLayout>
-          <div className="border-x-0 lg:border-x border-border min-h-screen">
+          <div className="border-x-0 lg:border-x border-gray-200 dark:border-gray-700 min-h-screen bg-white dark:bg-gray-900">
             <div className="p-8 text-center">
-              <p className="text-muted">Profil yükleniyor...</p>
+              <div className="animate-pulse">
+                <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4"></div>
+                <p className="text-gray-500 dark:text-gray-400">Profil yükleniyor...</p>
+              </div>
             </div>
           </div>
         </TwitterLayout>
@@ -175,10 +178,15 @@ export default function EditProfilePage() {
     return (
       <TweetProvider>
         <TwitterLayout>
-          <div className="border-x-0 lg:border-x border-border min-h-screen">
+          <div className="border-x-0 lg:border-x border-gray-200 dark:border-gray-700 min-h-screen bg-white dark:bg-gray-900">
             <div className="p-8 text-center">
-              <p className="text-muted">Profil bulunamadı</p>
-              <Link href="/" className="text-blue-500 hover:underline">
+              <div className="mb-4">
+                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full mx-auto flex items-center justify-center">
+                  <span className="text-2xl">😞</span>
+                </div>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">Profil bulunamadı</p>
+              <Link href="/" className="text-blue-600 dark:text-blue-400 hover:underline">
                 Ana sayfaya dön
               </Link>
             </div>
@@ -191,23 +199,26 @@ export default function EditProfilePage() {
   return (
     <TweetProvider>
       <TwitterLayout>
-        <div className="border-x-0 lg:border-x border-border min-h-screen">
-          {/* Header */}
-          <div className="sticky top-0 bg-black bg-opacity-80 backdrop-blur-md border-b border-border z-10 p-4">
+        <div className="border-x-0 lg:border-x border-gray-200 dark:border-gray-700 min-h-screen bg-white dark:bg-gray-900">
+          {/* Modern Header */}
+          <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200 dark:border-gray-700 z-10 p-6">
             <div className="flex items-center space-x-4">
               <Link href={`/${profile.username || profile.id}`}>
-                <ArrowLeft className="w-8 h-8 hover:bg-gray-900 rounded-full p-1 transition-colors" />
+                <div className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors">
+                  <ArrowLeft className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+                </div>
               </Link>
               <div>
-                <h1 className="font-bold text-xl">Profili düzenle</h1>
+                <h1 className="font-bold text-xl text-gray-900 dark:text-white">Profili düzenle</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Profilinizi kişiselleştirin</p>
               </div>
             </div>
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-            {/* Banner */}
-            <div className="relative h-48 bg-gray-800">
+            {/* Modern Banner */}
+            <div className="relative h-48 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-gray-800 dark:to-gray-700 overflow-hidden">
               {bannerImagePreview || profile.banner ? (
                 <Image
                   src={bannerImagePreview || profile.banner!}
@@ -216,10 +227,10 @@ export default function EditProfilePage() {
                   className="object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gray-700"></div>
+                <div className="w-full h-full bg-gradient-to-r from-blue-100 to-purple-100 dark:from-gray-800 dark:to-gray-700"></div>
               )}
               
-              <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center backdrop-blur-sm">
                 <input
                   type="file"
                   accept="image/jpeg,image/jpg,image/png,image/webp"
@@ -229,29 +240,29 @@ export default function EditProfilePage() {
                 />
                 <label
                   htmlFor="banner-upload"
-                  className="bg-black bg-opacity-60 p-3 rounded-full hover:bg-opacity-80 transition-colors cursor-pointer"
+                  className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl hover:bg-white/30 transition-colors cursor-pointer border border-white/20"
                   title="Banner fotoğrafı yükle (Max 2MB)"
                 >
-                  <Camera className="w-6 h-6" />
+                  <Camera className="w-6 h-6 text-white" />
                 </label>
               </div>
             </div>
 
-            {/* Profile Image */}
-            <div className="relative -mt-16 ml-4 mb-4">
+            {/* Modern Profile Image */}
+            <div className="relative -mt-16 ml-6 mb-6">
               <div className="relative w-32 h-32">
                 {profileImagePreview || profile.image ? (
                   <Image
                     src={profileImagePreview || profile.image!}
                     alt="Profile"
                     fill
-                    className="rounded-full object-cover border-4 border-black"
+                    className="rounded-full object-cover border-4 border-white dark:border-gray-900 shadow-lg"
                   />
                 ) : (
-                  <div className="w-32 h-32 bg-gray-600 rounded-full border-4 border-black"></div>
+                  <div className="w-32 h-32 bg-gray-200 dark:bg-gray-700 rounded-full border-4 border-white dark:border-gray-900 shadow-lg"></div>
                 )}
                 
-                <div className="absolute inset-0 bg-black bg-opacity-30 rounded-full flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center backdrop-blur-sm">
                   <input
                     type="file"
                     accept="image/jpeg,image/jpg,image/png,image/webp"
@@ -261,78 +272,78 @@ export default function EditProfilePage() {
                   />
                   <label
                     htmlFor="profile-upload"
-                    className="bg-black bg-opacity-60 p-2 rounded-full hover:bg-opacity-80 transition-colors cursor-pointer"
+                    className="bg-white/20 backdrop-blur-sm p-2 rounded-full hover:bg-white/30 transition-colors cursor-pointer border border-white/20"
                     title="Profil fotoğrafı yükle (Max 2MB)"
                   >
-                    <Camera className="w-4 h-4" />
+                    <Camera className="w-4 h-4 text-white" />
                   </label>
                 </div>
               </div>
             </div>
 
-            {/* Form Fields */}
-            <div className="p-4 space-y-6">
+            {/* Modern Form Fields */}
+            <div className="p-6 space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">İsim</label>
+                <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">İsim</label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full p-3 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white transition-all"
                   placeholder="İsminizi girin"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Kullanıcı adı</label>
+                <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">Kullanıcı adı</label>
                 <input
                   type="text"
                   value={formData.username}
                   onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                  className="w-full p-3 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white transition-all"
                   placeholder="Kullanıcı adınızı girin"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Bio</label>
+                <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">Bio</label>
                 <textarea
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                   rows={3}
-                  className="w-full p-3 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 resize-none"
+                  className="w-full p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white resize-none transition-all"
                   placeholder="Kendinizi tanıtın"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Konum</label>
+                <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">Konum</label>
                 <input
                   type="text"
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full p-3 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white transition-all"
                   placeholder="Konumunuzu girin"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Website</label>
+                <label className="block text-sm font-semibold mb-3 text-gray-900 dark:text-white">Website</label>
                 <input
                   type="url"
                   value={formData.website}
                   onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                  className="w-full p-3 bg-transparent border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full p-4 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 dark:text-white transition-all"
                   placeholder="https://..."
                 />
               </div>
 
-              {/* Save Button */}
-              <div className="flex justify-end pt-4">
+              {/* Modern Save Button */}
+              <div className="flex justify-end pt-6">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="bg-white text-black px-6 py-2 rounded-full font-bold hover:bg-gray-200 transition-colors disabled:opacity-50"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   {saving ? 'Kaydediliyor...' : 'Kaydet'}
                 </button>

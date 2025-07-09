@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Sparkles, UserPlus, Info } from 'lucide-react'
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -52,50 +52,79 @@ export default function SignUp() {
   }
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Side - Image/Logo */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-500 via-blue-500 to-purple-600 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="relative z-10 text-center text-white">
-          <div className="text-8xl mb-8 font-bold">𝕏</div>
-          <h1 className="text-4xl font-bold mb-4">Konuşmaya katıl</h1>
-          <p className="text-xl opacity-90">Bugün Twitter&apos;a kaydol.</p>
+    <div className="min-h-screen flex bg-gradient-to-br from-background via-surface/20 to-background">
+      {/* Left Side - Modern Hero */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-accent/5 via-accent/10 to-accent/5 items-center justify-center relative overflow-hidden backdrop-blur-3xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent"></div>
+        
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-20 w-40 h-40 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-32 right-32 w-60 h-60 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/3 w-32 h-32 bg-accent/10 rounded-full blur-2xl animate-pulse delay-500"></div>
         </div>
-        {/* Decorative elements */}
-        <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full"></div>
-        <div className="absolute bottom-20 right-20 w-32 h-32 bg-white/5 rounded-full"></div>
-        <div className="absolute top-1/3 right-10 w-16 h-16 bg-white/10 rounded-full"></div>
-        <div className="absolute bottom-1/3 left-20 w-24 h-24 bg-white/5 rounded-full"></div>
+        
+        <div className="relative z-10 text-center max-w-md">
+          <div className="mb-8">
+            <div className="w-20 h-20 bg-gradient-to-br from-accent to-accent/80 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-accent/25">
+              <UserPlus className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-5xl font-bold text-foreground mb-4 leading-tight">
+              Konuşmaya katıl
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">Bugün Tinetir&apos;e kaydol.</p>
+          </div>
+          
+          <div className="space-y-4 text-left">
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Ücretsiz hesap</span>
+            </div>
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+              <span>Anında katılım</span>
+            </div>
+            <div className="flex items-center gap-3 text-muted-foreground">
+              <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+              <span>Global erişim</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Right Side - Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-black">
+      {/* Right Side - Modern Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
-            <div className="text-6xl font-bold text-white mb-4">𝕏</div>
+            <div className="w-16 h-16 bg-gradient-to-br from-accent to-accent/80 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-accent/25">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-2xl font-bold text-foreground">Tinetir</h1>
           </div>
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white mb-2">Twitter&apos;a katıl</h2>
-            <p className="text-gray-400">Hesap oluşturarak başla</p>
+            <h2 className="text-3xl font-bold text-foreground mb-3">Hesap oluştur</h2>
+            <p className="text-muted-foreground">Topluluğa katıl ve paylaşımlarını yap</p>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="bg-red-900/30 border border-red-500/50 rounded-xl p-4 flex items-center space-x-3">
-                <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-xs">!</span>
+              <div className="bg-red-500/5 border border-red-500/20 rounded-3xl p-4 backdrop-blur-sm">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-red-500/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <span className="text-red-500 text-sm font-bold">!</span>
+                  </div>
+                  <p className="text-red-500 text-sm font-medium">{error}</p>
                 </div>
-                <p className="text-red-300 text-sm">{error}</p>
               </div>
             )}
 
             {/* Name Field */}
-            <div className="space-y-2">
-              <label htmlFor="name" className="block text-white text-sm font-medium">
+            <div className="space-y-3">
+              <label htmlFor="name" className="block text-foreground text-sm font-semibold">
                 Ad Soyad
               </label>
               <div className="relative">

@@ -238,21 +238,21 @@ export default function TweetItem({ tweet }: TweetItemProps) {
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: swiperCustomStyles }} />
-      <div className="border-b border-border p-4 hover:bg-gray-950/50 transition-colors cursor-pointer group">
-        <div className="flex space-x-3">
+      <div className="border-b border-border/50 p-6 hover:bg-surface/30 transition-all cursor-pointer group">
+        <div className="flex space-x-4">
           {/* User Avatar */}
           <Link href={`/${tweet.user.username || tweet.user.id.slice(0, 8)}`}>
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0 hover:opacity-80 transition-opacity">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-accent/20 to-accent/10 rounded-2xl flex items-center justify-center overflow-hidden flex-shrink-0 hover:opacity-80 transition-all hover:scale-105 ring-2 ring-accent/20">
               {tweet.user.image ? (
                 <Image 
                   src={tweet.user.image} 
                   alt={tweet.user.name || 'User'} 
-                  width={48}
-                  height={48}
-                  className="w-full h-full rounded-full object-cover"
+                  width={56}
+                  height={56}
+                  className="w-full h-full rounded-2xl object-cover"
                 />
               ) : (
-                <User className="w-4 h-4 sm:w-6 sm:h-6" />
+                <User className="w-6 h-6 sm:w-7 sm:h-7 text-accent" />
               )}
             </div>
           </Link>
@@ -260,10 +260,10 @@ export default function TweetItem({ tweet }: TweetItemProps) {
           {/* Tweet Content */}
           <div className="flex-1 min-w-0">
             {/* User Info */}
-            <div className="flex items-center space-x-1 sm:space-x-2 mb-1">
+            <div className="flex items-center space-x-2 mb-2">
               <Link 
                 href={`/${tweet.user.username || tweet.user.id.slice(0, 8)}`}
-                className="font-bold hover:underline text-sm sm:text-base truncate"
+                className="font-semibold hover:underline text-sm sm:text-base text-foreground truncate hover:text-accent transition-colors"
               >
                 {tweet.user.name || 'Adsız Kullanıcı'}
               </Link>
@@ -271,18 +271,18 @@ export default function TweetItem({ tweet }: TweetItemProps) {
                 <BadgeList badges={tweet.user.badges} size="sm" />
               )}
               {tweet.user.verified && !tweet.user.badges?.includes('verified') && (
-                <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs">✓</span>
+                <div className="w-5 h-5 bg-accent rounded-xl flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">✓</span>
                 </div>
               )}
               <Link 
                 href={`/${tweet.user.username || tweet.user.id.slice(0, 8)}`}
-                className="text-muted text-sm truncate hover:underline"
+                className="text-muted-foreground text-sm truncate hover:underline hover:text-accent transition-colors"
               >
                 @{tweet.user.username || tweet.user.id.slice(0, 8)}
               </Link>
-              <span className="text-muted hidden sm:inline">·</span>
-              <span className="text-muted text-sm hidden sm:inline">
+              <span className="text-muted-foreground hidden sm:inline">·</span>
+              <span className="text-muted-foreground text-sm hidden sm:inline">
                 {formatDistanceToNow(new Date(tweet.createdAt), { 
                   addSuffix: true, 
                   locale: tr 
@@ -291,9 +291,9 @@ export default function TweetItem({ tweet }: TweetItemProps) {
               <div className="ml-auto relative">
                 <button 
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="hover:bg-gray-800 p-1 sm:p-2 rounded-full transition-colors"
+                  className="hover:bg-surface/50 p-2 rounded-2xl transition-all hover:scale-105 active:scale-95"
                 >
-                  <MoreHorizontal className="w-4 h-4 text-muted" />
+                  <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
                 </button>
                 
                 {/* Dropdown Menu */}

@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useSession } from 'next-auth/react'
-import { User, Image as ImageIcon, Smile, Calendar, MapPin, Hash, AtSign, X } from 'lucide-react'
+import { User, Image as ImageIcon, Smile, Calendar, MapPin, Hash, AtSign, X, Send } from 'lucide-react'
 import Image from 'next/image'
 import { useTweets } from '@/contexts/TweetContext'
 
@@ -21,15 +21,14 @@ export default function TweetComposer() {
   const [showLocationInput, setShowLocationInput] = useState(false)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
-
+  
   const emojis = ['😀', '😂', '❤️', '🔥', '👍', '👎', '😍', '🤔', '😭', '🎉', '💯', '🚀', '⭐', '🌟', '💎', '🎯']
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!content.trim() && mediaFiles.length === 0) return
-
+    
     setIsLoading(true)
-
     try {
       // Extract hashtags and mentions
       const hashtags = content.match(/#\w+/g)?.map(tag => tag.slice(1)) || []
@@ -66,27 +65,6 @@ export default function TweetComposer() {
       console.error('Tweet oluşturulurken hata:', error)
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  // Test için demo resim ekleme - basit versiyon
-  const addDemoImage = () => {
-    // Farklı demo resimler için random boyutlar ve ID'ler
-    const imageIds = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-    const randomId = imageIds[Math.floor(Math.random() * imageIds.length)]
-    const demoImageUrl = `https://picsum.photos/400/300?random=${randomId + mediaFiles.length}`
-    
-    // Maksimum 4 resim limiti
-    if (mediaFiles.length < 4) {
-      // Boş bir Blob oluştur (File yerine)
-      const emptyBlob = new Blob(['demo-image-data'], { type: 'image/jpeg' })
-      // Blob'dan File oluştur, bu daha uyumlu
-      const file = Object.assign(emptyBlob, {
-        name: `demo-${Date.now()}.jpg`,
-        lastModified: Date.now(),
-      }) as File
-      
-      setMediaFiles(prev => [...prev, { file, url: demoImageUrl }])
     }
   }
 
@@ -147,181 +125,248 @@ export default function TweetComposer() {
   if (!session) return null
 
   return (
-    <div className="border-b border-border p-4">
-      <div className="flex space-x-3">
-        {/* User Avatar */}
-        <div className="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
-          {session.user?.image ? (
-            <Image 
-              src={session.user.image} 
-              alt={session.user.name || 'User'} 
-              width={48}
-              height={48}
-              className="w-full h-full rounded-full object-cover"
-            />
-          ) : (
-            <User className="w-6 h-6" />
-          )}
-        </div>
-
-        {/* Tweet Form */}
-        <form onSubmit={handleSubmit} className="flex-1">
-          <div className="mb-4">
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Neler oluyor?"
-              className="w-full bg-transparent text-lg lg:text-xl placeholder-muted resize-none outline-none min-h-[100px] lg:min-h-[120px]"
-              maxLength={280}
-            />
+    <div className="bg-card/50 backdrop-blur-sm border-b border-border/50">
+      <div className="p-6">
+        <div className="flex space-x-4">
+          {/* Modern User Avatar */}
+          <div className="w-14 h-14 bg-gradient-to-br from-accent/20 to-accent/10 rounded-2xl flex items-center justify-center overflow-hidden flex-shrink-0 ring-2 ring-accent/20">
+            {session.user?.image ? (
+              <Image 
+                src={session.user.image} 
+                alt={session.user.name || 'User'} 
+                width={56}
+                height={56}
+                className="w-full h-full rounded-2xl object-cover"
+              />
+            ) : (
+              <User className="w-7 h-7 text-accent" />
+            )}
           </div>
 
-          {/* Location Input */}
-          {showLocationInput && (
-            <div className="mb-4 p-3 border border-border rounded-lg">
-              <div className="flex items-center space-x-2 mb-2">
-                <MapPin className="w-4 h-4 text-accent" />
-                <span className="text-sm font-medium">Konum ekle</span>
-                <button
-                  type="button"
-                  onClick={() => setShowLocationInput(false)}
-                  className="ml-auto p-1 hover:bg-gray-800 rounded-full"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Konum girin..."
-                className="w-full bg-transparent text-sm outline-none border-b border-border pb-1"
+          {/* Tweet Form */}
+          <form onSubmit={handleSubmit} className="flex-1">
+            <div className="mb-6">
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Neler oluyor?"
+                className="w-full bg-transparent text-lg lg:text-xl text-foreground placeholder:text-muted-foreground 
+                         resize-none outline-none min-h-[120px] lg:min-h-[140px] leading-relaxed font-medium"
+                maxLength={280}
               />
             </div>
-          )}
 
-          {/* Media Preview */}
-          {mediaFiles.length > 0 && (
-            <div className="mb-4 grid grid-cols-2 gap-2">
-              {mediaFiles.map((media, index) => (
-                <div key={index} className="relative rounded-lg overflow-hidden">
-                  <Image
-                    src={media.url}
-                    alt="Media preview"
-                    width={200}
-                    height={200}
-                    className="w-full h-32 object-cover"
-                  />
+            {/* Location Input */}
+            {showLocationInput && (
+              <div className="mb-6 p-4 border border-border/50 rounded-2xl bg-surface/30 backdrop-blur-sm">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="p-2 bg-accent/10 rounded-xl">
+                    <MapPin className="w-4 h-4 text-accent" />
+                  </div>
+                  <span className="text-sm font-semibold text-foreground">Konum ekle</span>
                   <button
                     type="button"
-                    onClick={() => removeMedia(index)}
-                    className="absolute top-2 right-2 bg-black/70 hover:bg-black/90 text-white p-1 rounded-full"
+                    onClick={() => setShowLocationInput(false)}
+                    className="ml-auto p-2 hover:bg-surface/50 rounded-xl transition-all hover:scale-105 active:scale-95"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-4 h-4 text-muted-foreground" />
                   </button>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* Emoji Picker */}
-          {showEmojiPicker && (
-            <div className="mb-4 p-3 border border-border rounded-lg">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium">Emoji seç</span>
-                <button
-                  type="button"
-                  onClick={() => setShowEmojiPicker(false)}
-                  className="p-1 hover:bg-gray-800 rounded-full"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                <input
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="Konum girin..."
+                  className="w-full bg-transparent text-sm text-foreground outline-none border-b border-border/50 pb-2 
+                           focus:border-accent transition-colors placeholder:text-muted-foreground"
+                />
               </div>
-              <div className="grid grid-cols-8 gap-2">
-                {emojis.map((emoji, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    onClick={() => insertEmoji(emoji)}
-                    className="p-2 hover:bg-gray-800 rounded text-lg transition-colors"
-                  >
-                    {emoji}
-                  </button>
+            )}
+
+            {/* Media Preview */}
+            {mediaFiles.length > 0 && (
+              <div className="mb-6 grid grid-cols-2 gap-3">
+                {mediaFiles.map((media, index) => (
+                  <div key={index} className="relative rounded-2xl overflow-hidden border border-border/50 bg-surface/30">
+                    <Image
+                      src={media.url}
+                      alt="Media preview"
+                      width={200}
+                      height={200}
+                      className="w-full h-32 object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeMedia(index)}
+                      className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-500 text-white p-2 rounded-xl 
+                               transition-all hover:scale-105 active:scale-95 shadow-lg"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Tweet Actions */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-            <div className="flex items-center space-x-2 sm:space-x-4 text-accent">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleMediaUpload}
-                accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm"
-                multiple
-                className="hidden"
-              />
-              <button 
-                type="button" 
-                onClick={() => fileInputRef.current?.click()}
-                className="hover:bg-accent/10 p-2 rounded-full transition-colors"
-              >
-                <ImageIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button 
-                type="button" 
-                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                className="hover:bg-accent/10 p-2 rounded-full transition-colors"
-              >
-                <Smile className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button type="button" className="hover:bg-accent/10 p-2 rounded-full transition-colors">
-                <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button 
-                type="button" 
-                onClick={getLocation}
-                className="hover:bg-accent/10 p-2 rounded-full transition-colors"
-              >
-                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button type="button" className="hover:bg-accent/10 p-2 rounded-full transition-colors">
-                <Hash className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button type="button" className="hover:bg-accent/10 p-2 rounded-full transition-colors">
-                <AtSign className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              {/* Demo resim butonu - test için */}
-              <button 
-                type="button" 
-                onClick={addDemoImage}
-                className="hover:bg-accent/10 p-2 rounded-full transition-colors text-yellow-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                title={`Demo resim ekle (${mediaFiles.length}/4)`}
-                disabled={mediaFiles.length >= 4}
-              >
-                📷+
-              </button>
-            </div>
+            {/* Emoji Picker */}
+            {showEmojiPicker && (
+              <div className="mb-6 p-4 border border-border/50 rounded-2xl bg-surface/30 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-semibold text-foreground">Emoji seç</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiPicker(false)}
+                    className="p-2 hover:bg-surface/50 rounded-xl transition-all hover:scale-105 active:scale-95"
+                  >
+                    <X className="w-4 h-4 text-muted-foreground" />
+                  </button>
+                </div>
+                <div className="grid grid-cols-8 gap-2">
+                  {emojis.map((emoji, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => insertEmoji(emoji)}
+                      className="p-2 hover:bg-surface/50 rounded-xl text-lg transition-all hover:scale-110 active:scale-95"
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            <div className="flex items-center justify-between sm:justify-end space-x-3">
-              {/* Character Count */}
-              <div className={`text-sm ${content.length > 260 ? 'text-red-500' : 'text-muted'}`}>
-                {content.length}/280
+            {/* Tweet Actions */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+              <div className="flex items-center space-x-1">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleMediaUpload}
+                  accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm"
+                  multiple
+                  className="hidden"
+                />
+                
+                <button 
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-3 hover:bg-accent/10 rounded-2xl transition-all hover:scale-105 active:scale-95 group"
+                  title="Fotoğraf ekle"
+                >
+                  <ImageIcon className="w-5 h-5 text-accent group-hover:text-accent/80" />
+                </button>
+                
+                <button 
+                  type="button"
+                  onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                  className="p-3 hover:bg-accent/10 rounded-2xl transition-all hover:scale-105 active:scale-95 group"
+                  title="Emoji ekle"
+                >
+                  <Smile className="w-5 h-5 text-accent group-hover:text-accent/80" />
+                </button>
+                
+                <button 
+                  type="button"
+                  className="p-3 hover:bg-accent/10 rounded-2xl transition-all hover:scale-105 active:scale-95 group"
+                  title="Takvim"
+                >
+                  <Calendar className="w-5 h-5 text-muted-foreground group-hover:text-accent" />
+                </button>
+                
+                <button 
+                  type="button"
+                  onClick={getLocation}
+                  className="p-3 hover:bg-accent/10 rounded-2xl transition-all hover:scale-105 active:scale-95 group"
+                  title="Konum ekle"
+                >
+                  <MapPin className="w-5 h-5 text-muted-foreground group-hover:text-accent" />
+                </button>
+                
+                <button 
+                  type="button"
+                  className="p-3 hover:bg-accent/10 rounded-2xl transition-all hover:scale-105 active:scale-95 group"
+                  title="Hashtag"
+                >
+                  <Hash className="w-5 h-5 text-muted-foreground group-hover:text-accent" />
+                </button>
+                
+                <button 
+                  type="button"
+                  className="p-3 hover:bg-accent/10 rounded-2xl transition-all hover:scale-105 active:scale-95 group"
+                  title="Mention"
+                >
+                  <AtSign className="w-5 h-5 text-muted-foreground group-hover:text-accent" />
+                </button>
               </div>
 
-              {/* Tweet Button */}
-              <button
-                type="submit"
-                disabled={(!content.trim() && mediaFiles.length === 0) || isLoading || content.length > 280}
-                className="bg-accent hover:bg-accent-hover disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-2 px-4 sm:px-6 rounded-full transition-colors text-sm sm:text-base"
-              >
-                {isLoading ? 'Gönderiliyor...' : 'Tweetle'}
-              </button>
+              <div className="flex items-center justify-between sm:justify-end space-x-4">
+                {/* Character Count Circle */}
+                {content.length > 0 && (
+                  <div className="flex items-center gap-3">
+                    <div className={`text-sm font-medium ${
+                      content.length > 260 ? 'text-red-500' : 
+                      content.length > 240 ? 'text-yellow-500' : 
+                      'text-muted-foreground'
+                    }`}>
+                      {content.length}/280
+                    </div>
+                    <div className="w-8 h-8 relative">
+                      <svg className="w-8 h-8 transform -rotate-90" viewBox="0 0 32 32">
+                        <circle
+                          cx="16"
+                          cy="16"
+                          r="14"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          className="text-surface"
+                        />
+                        <circle
+                          cx="16"
+                          cy="16"
+                          r="14"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeDasharray={`${(content.length / 280) * 87.96} 87.96`}
+                          className={
+                            content.length > 260 ? 'text-red-500' :
+                            content.length > 240 ? 'text-yellow-500' :
+                            'text-accent'
+                          }
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                )}
+
+                {/* Tweet Button */}
+                <button
+                  type="submit"
+                  disabled={isLoading || (!content.trim() && mediaFiles.length === 0)}
+                  className="bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent 
+                           disabled:from-muted-foreground/20 disabled:to-muted-foreground/10 disabled:cursor-not-allowed 
+                           text-white font-semibold px-8 py-3 rounded-2xl transition-all hover:scale-105 active:scale-95 
+                           shadow-lg shadow-accent/25 disabled:shadow-none flex items-center gap-2
+                           focus:outline-none focus:ring-2 focus:ring-accent/20"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                      Gönderiliyor...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Tweetle
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   )
