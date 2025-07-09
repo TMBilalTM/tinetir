@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Eye, EyeOff, Sparkles, UserPlus } from 'lucide-react'
+import { Eye, EyeOff, Sparkles, UserPlus, Info } from 'lucide-react'
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
