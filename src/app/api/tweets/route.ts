@@ -8,7 +8,13 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const tweets = await prisma.tweet.findMany({
+    // Timeout promise
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Database timeout')), 8000) // 8 seconds
+    })
+
+    // Database query promise
+    const queryPromise = prisma.tweet.findMany({
       include: {
         user: {
           select: {
@@ -49,11 +55,16 @@ export async function GET() {
       orderBy: {
         createdAt: 'desc',
       },
+      take: 50,
     })
+
+    // Race between timeout and query
+    const tweets = await Promise.race([queryPromise, timeoutPromise]) as any[]
 
     // JSON alanları parse et
     const tweetsWithParsedData = tweets.map((tweet) => ({
       ...tweet,
+      createdAt: tweet.createdAt.toISOString(),
       images: tweet.images ? JSON.parse(tweet.images) : [],
       hashtags: tweet.hashtags ? JSON.parse(tweet.hashtags) : [],
       mentions: tweet.mentions ? JSON.parse(tweet.mentions) : [],
@@ -66,6 +77,15 @@ export async function GET() {
     return NextResponse.json(tweetsWithParsedData)
   } catch (error) {
     console.error('Tweets getirme hatası:', error)
+    
+    // Connection error handling
+    if (error instanceof Error && error.message.includes('too many connections')) {
+      return NextResponse.json(
+        { error: 'Veritabanı meşgul, lütfen birkaç saniye sonra tekrar deneyin' },
+        { status: 503 }
+      )
+    }
+    
     return NextResponse.json(
       { error: 'Tweets getirilemedi' },
       { status: 500 }

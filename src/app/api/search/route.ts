@@ -19,8 +19,13 @@ export async function GET(request: NextRequest) {
 
     const query = q.trim().toLowerCase()
 
+    // Timeout promise
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Search timeout')), 8000)
+    })
+
     // Tweet'leri ara
-    const tweets = await prisma.tweet.findMany({
+    const queryPromise = prisma.tweet.findMany({
       where: {
         OR: [
           {
@@ -104,6 +109,8 @@ export async function GET(request: NextRequest) {
       take: 50, // Maksimum 50 tweet
     })
 
+    const tweets = await Promise.race([queryPromise, timeoutPromise]) as any[]
+
     // Date'leri string'e çevir ve JSON alanları parse et
     const tweetsWithStringDates = tweets.map(tweet => {
       const tweetData = tweet as any
@@ -120,6 +127,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(tweetsWithStringDates)
   } catch (error) {
     console.error('Arama hatası:', error)
+    
+    // Connection error handling
+    if (error instanceof Error && error.message.includes('too many connections')) {
+      return NextResponse.json(
+        { error: 'Veritabanı meşgul, lütfen birkaç saniye sonra tekrar deneyin' },
+        { status: 503 }
+      )
+    }
+    
     return NextResponse.json(
       { error: 'Arama yapılamadı' },
       { status: 500 }
