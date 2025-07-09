@@ -1,10 +1,19 @@
 # Vercel Environment Variables
 # Bu bilgileri Vercel Dashboard > Settings > Environment Variables'a ekleyin
 
+# Ana database URL (Prisma Accelerate ile)
 DATABASE_URL=prisma+postgres://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiMDFKWk5aRTNXWjY3VlFTTTBOWTNSTk1RM1MiLCJ0ZW5hbnRfaWQiOiI1YmQ1NDVjNDk2M2RiNjhhZjJhNGE4ZjAwMDE4MWFhZTRjMzEzZjA0ZWFmY2Q3ZGVmODFmZTI3N2RhMWZjZWU1IiwiaW50ZXJuYWxfc2VjcmV0IjoiOWYyMWU2Y2ItMzg2OC00YmFiLTg1MjAtMmRiYjRhZjhmYTRiIn0.VT9QDozmWePqzFgHzIdJ5tK2W5k3wbjAYdqqnA3smAY
 
+# Direct database connection (migration'lar için)
 DIRECT_URL=postgres://5bd545c4963db68af2a4a8f000181aae4c313f04eafcd7def81fe277da1fcee5:sk_UaQA2TAZfkIUUnftsTMrB@db.prisma.io:5432/?sslmode=require
 
+# NextAuth configuration
 NEXTAUTH_SECRET=a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6
 
+# Site URL (Vercel projenizin URL'i ile değiştirin)
 NEXTAUTH_URL=https://your-project-name.vercel.app
+
+# Not: 
+# - bilaltm_POSTGRES_URL ve bilaltm_PRISMA_DATABASE_URL Vercel tarafından otomatik oluşturulan değişkenlerdir
+# - Bu değişkenleri yukarıdaki DATABASE_URL ve DIRECT_URL ile eşleştirdik
+# - Vercel deployment'ında bu 4 ana değişkeni ayarlamanız yeterli

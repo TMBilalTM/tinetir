@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma db push && next build"
+    "vercel-build": "prisma generate --schema=./prisma/schema.production.prisma && prisma db push --schema=./prisma/schema.production.prisma && next build",
+    "build:prod": "prisma generate --schema=./prisma/schema.production.prisma && next build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
