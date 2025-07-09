@@ -4,9 +4,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["picsum.photos"],
   },
-  experimental: {
-    serverComponentsExternalPackages: ["@prisma/client", "prisma"]
-  },
+  serverExternalPackages: ["@prisma/client", "prisma"],
   webpack: (config) => {
     config.externals.push("@prisma/client");
     return config;
