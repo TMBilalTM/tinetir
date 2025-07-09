@@ -100,19 +100,19 @@ export default function ReplyComposer({
               className={`w-full bg-transparent border-none outline-none resize-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 ${
                 compact ? 'text-sm min-h-[60px]' : 'text-base min-h-[80px]'
               }`}
-              maxLength={280}
+              maxLength={500}
             />
             
             <div className="flex items-center justify-between mt-3">
               {/* Character Count */}
               <div className={`${compact ? 'text-xs' : 'text-sm'} ${content.length > 260 ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'}`}>
-                {content.length}/280
+                {content.length}/500
               </div>
 
               {/* Reply Button */}
               <button
                 type="submit"
-                disabled={!content.trim() || isLoading || content.length > 280}
+                disabled={!content.trim() || isLoading || content.length > 500}
                 className={`bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center space-x-2 ${
                   compact ? 'px-4 py-2 text-sm' : 'px-6 py-2.5'
                 }`}

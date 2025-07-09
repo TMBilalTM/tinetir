@@ -152,7 +152,7 @@ export default function TweetComposer() {
                 placeholder="Neler oluyor?"
                 className="w-full bg-transparent text-lg lg:text-xl text-foreground placeholder:text-muted-foreground 
                          resize-none outline-none min-h-[120px] lg:min-h-[140px] leading-relaxed font-medium"
-                maxLength={280}
+                maxLength={500}
               />
             </div>
 
@@ -309,7 +309,7 @@ export default function TweetComposer() {
                       content.length > 240 ? 'text-yellow-500' : 
                       'text-muted-foreground'
                     }`}>
-                      {content.length}/280
+                      {content.length}/500
                     </div>
                     <div className="w-8 h-8 relative">
                       <svg className="w-8 h-8 transform -rotate-90" viewBox="0 0 32 32">
@@ -329,7 +329,7 @@ export default function TweetComposer() {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          strokeDasharray={`${(content.length / 280) * 87.96} 87.96`}
+                          strokeDasharray={`${(content.length / 500) * 87.96} 87.96`}
                           className={
                             content.length > 260 ? 'text-red-500' :
                             content.length > 240 ? 'text-yellow-500' :

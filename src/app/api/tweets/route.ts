@@ -160,9 +160,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    if (content.length > 280) {
+    if (content.length > 500) {
       return NextResponse.json(
-        { error: 'Tweet 280 karakterden uzun olamaz' },
+        { error: 'Tweet 500 karakterden uzun olamaz' },
         { status: 400 }
       )
     }

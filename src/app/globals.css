@@ -171,6 +171,29 @@ body {
   }
 }
 
+/* Tweet text styling */
+.tweet-text {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.5;
+}
+
+.tweet-text a,
+.tweet-text .hashtag,
+.tweet-text .mention {
+  color: var(--accent);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.tweet-text a:hover,
+.tweet-text .hashtag:hover,
+.tweet-text .mention:hover {
+  text-decoration: underline;
+}
+
 /* Improved mobile scrolling */
 @media (max-width: 1024px) {
   .custom-scrollbar {

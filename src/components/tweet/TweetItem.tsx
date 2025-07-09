@@ -64,6 +64,7 @@ export default function TweetItem({ tweet }: TweetItemProps) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [showReplies, setShowReplies] = useState(false)
   const [replyRefresh, setReplyRefresh] = useState(0)
+  const [isExpanded, setIsExpanded] = useState(false) // Tweet içeriği genişletme durumu
 
   // Tweet sahibi kontrolü
   const isOwner = session?.user?.id === tweet.user.id
@@ -355,29 +356,47 @@ export default function TweetItem({ tweet }: TweetItemProps) {
                 addSuffix: true, 
                 locale: tr 
               })}
-            </div>
-
-            {/* Tweet Text */}
+            </div>            {/* Tweet Text */}
             <div className="mb-3">
-              <p className="whitespace-pre-wrap break-words text-sm sm:text-base">
-                {tweet.content.split(/(\s+)/).map((word, index) => {
-                  if (word.startsWith('#')) {
-                    return (
-                      <span key={index} className="text-accent hover:underline cursor-pointer">
-                        {word}
-                      </span>
-                    )
-                  } else if (word.startsWith('@')) {
-                    return (
-                      <span key={index} className="text-accent hover:underline cursor-pointer">
-                        {word}
-                      </span>
-                    )
-                  } else {
-                    return word
-                  }
-                })}
-              </p>
+              {(() => {
+                const maxLength = 350 // Display limit increased
+                const shouldTruncate = tweet.content.length > maxLength && !isExpanded
+                const displayContent = shouldTruncate 
+                  ? tweet.content.substring(0, maxLength) + '...'
+                  : tweet.content
+
+                return (
+                  <>
+                    <p className="tweet-text whitespace-pre-wrap text-sm sm:text-base leading-relaxed max-w-full">
+                      {displayContent.split(/(\s+)/).map((word, index) => {
+                        if (word.startsWith('#')) {
+                          return (
+                            <span key={index} className="hashtag">
+                              {word}
+                            </span>
+                          )
+                        } else if (word.startsWith('@')) {
+                          return (
+                            <span key={index} className="mention">
+                              {word}
+                            </span>
+                          )
+                        } else {
+                          return word
+                        }
+                      })}
+                    </p>
+                    {tweet.content.length > maxLength && (
+                      <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="text-accent hover:underline text-sm font-medium mt-1"
+                      >
+                        {isExpanded ? 'Daha az göster' : 'Devamını oku'}
+                      </button>
+                    )}
+                  </>
+                )
+              })()}
             </div>
 
             {/* Media Preview */}

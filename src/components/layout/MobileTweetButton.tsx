@@ -117,7 +117,7 @@ export default function MobileTweetButton() {
                     placeholder="Neler oluyor?"
                     className="w-full bg-transparent text-lg text-foreground placeholder:text-muted-foreground 
                              resize-none outline-none min-h-[200px] font-medium leading-relaxed"
-                    maxLength={280}
+                    maxLength={500}
                     autoFocus
                   />
                 </div>
@@ -147,7 +147,7 @@ export default function MobileTweetButton() {
                     content.length > 240 ? 'text-yellow-500' : 
                     'text-muted-foreground'
                   }`}>
-                    {content.length}/280
+                    {content.length}/500
                   </div>
                   {content.length > 0 && (
                     <div className="w-8 h-8 relative">
@@ -168,7 +168,7 @@ export default function MobileTweetButton() {
                           fill="none"
                           stroke="currentColor"
                           strokeWidth="2"
-                          strokeDasharray={`${(content.length / 280) * 87.96} 87.96`}
+                          strokeDasharray={`${(content.length / 500) * 87.96} 87.96`}
                           className={
                             content.length > 260 ? 'text-red-500' :
                             content.length > 240 ? 'text-yellow-500' :
