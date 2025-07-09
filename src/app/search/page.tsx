@@ -35,30 +35,40 @@ interface Tweet {
 function SearchContent() {
   const searchParams = useSearchParams()
   const hashtag = searchParams.get('hashtag')
+  const q = searchParams.get('q')
   const [tweets, setTweets] = useState<Tweet[]>([])
   const [loading, setLoading] = useState(true)
 
+  const searchQuery = hashtag || q
+  const searchType = hashtag ? 'hashtag' : 'general'
+
   useEffect(() => {
-    if (!hashtag) return
+    if (!searchQuery) return
 
     const fetchTweets = async () => {
       try {
-        const response = await fetch(`/api/search/hashtag?hashtag=${encodeURIComponent(hashtag)}`)
+        let response
+        if (searchType === 'hashtag') {
+          response = await fetch(`/api/search/hashtag?hashtag=${encodeURIComponent(searchQuery)}`)
+        } else {
+          response = await fetch(`/api/search?q=${encodeURIComponent(searchQuery)}`)
+        }
+        
         if (response.ok) {
           const data = await response.json()
           setTweets(data)
         }
       } catch (error) {
-        console.error('Hashtag arama hatası:', error)
+        console.error('Arama hatası:', error)
       } finally {
         setLoading(false)
       }
     }
 
     fetchTweets()
-  }, [hashtag])
+  }, [searchQuery, searchType])
 
-  if (!hashtag) {
+  if (!searchQuery) {
     return (
       <TweetProvider>
         <TwitterLayout>
@@ -91,10 +101,16 @@ function SearchContent() {
               </Link>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-accent/10 rounded-2xl">
-                  <Hash className="w-6 h-6 text-accent" />
+                  {searchType === 'hashtag' ? (
+                    <Hash className="w-6 h-6 text-accent" />
+                  ) : (
+                    <Search className="w-6 h-6 text-accent" />
+                  )}
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">{hashtag}</h1>
+                  <h1 className="text-2xl font-bold text-foreground">
+                    {searchType === 'hashtag' ? `#${searchQuery}` : `"${searchQuery}"`}
+                  </h1>
                   <p className="text-muted-foreground text-sm font-medium">
                     {loading ? (
                       <div className="flex items-center gap-2">
@@ -104,7 +120,7 @@ function SearchContent() {
                     ) : (
                       <div className="flex items-center gap-2">
                         <TrendingUp className="w-4 h-4" />
-                        {tweets.length.toLocaleString()} tweet bulundu
+                        {tweets.length.toLocaleString()} {searchType === 'hashtag' ? 'hashtag' : 'sonuç'} bulundu
                       </div>
                     )}
                   </p>
@@ -137,13 +153,17 @@ function SearchContent() {
               <div className="p-16 text-center bg-surface/30">
                 <div className="space-y-6 max-w-md mx-auto">
                   <div className="w-20 h-20 bg-gradient-to-br from-accent/20 to-accent/10 rounded-3xl flex items-center justify-center mx-auto">
-                    <Hash className="w-10 h-10 text-accent" />
+                    {searchType === 'hashtag' ? (
+                      <Hash className="w-10 h-10 text-accent" />
+                    ) : (
+                      <Search className="w-10 h-10 text-accent" />
+                    )}
                   </div>
                   <div className="space-y-3">
-                    <h2 className="text-2xl font-bold text-foreground">Hiç tweet bulunamadı</h2>
+                    <h2 className="text-2xl font-bold text-foreground">Hiç sonuç bulunamadı</h2>
                     <p className="text-muted-foreground text-lg leading-relaxed">
-                      <span className="font-semibold text-accent">{hashtag}</span> hashtag&apos;i ile ilgili henüz tweet atılmamış.
-                      İlk tweeti sen at!
+                      <span className="font-semibold text-accent">&quot;{searchQuery}&quot;</span> ile ilgili {searchType === 'hashtag' ? 'hashtag' : 'içerik'} bulunamadı.
+                      {searchType === 'hashtag' ? ' İlk tweeti sen at!' : ' Farklı kelimeler deneyin.'}
                     </p>
                   </div>
                   <Link 
