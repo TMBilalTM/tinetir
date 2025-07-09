@@ -23,12 +23,28 @@ export async function GET(request: NextRequest) {
       ? normalizedHashtag.slice(1) 
       : normalizedHashtag
 
-    // Hashtag içeren tweetleri bul
+    // Hashtag içeren tweetleri bul - hem content hem de hashtags alanından ara
     const tweets = await prisma.tweet.findMany({
       where: {
-        content: {
-          contains: `#${hashtagWithoutHash}`,
-        },
+        OR: [
+          {
+            content: {
+              contains: `#${hashtagWithoutHash}`,
+              mode: 'insensitive',
+            },
+          },
+          {
+            content: {
+              contains: hashtag,
+              mode: 'insensitive',
+            },
+          },
+          {
+            hashtags: {
+              contains: `"${hashtagWithoutHash}"`,
+            },
+          },
+        ],
       },
       include: {
         user: {
@@ -71,15 +87,18 @@ export async function GET(request: NextRequest) {
       take: 50, // Maksimum 50 tweet
     })
 
-    // Date'leri string'e çevir
-    const tweetsWithStringDates = tweets.map(tweet => ({
-      ...tweet,
-      createdAt: tweet.createdAt.toISOString(),
-      images: [], // Şimdilik boş array
-      location: null,
-      hashtags: [],
-      mentions: [],
-    }))
+    // Date'leri string'e çevir ve JSON alanları parse et
+    const tweetsWithStringDates = tweets.map(tweet => {
+      const tweetData = tweet as any
+      return {
+        ...tweet,
+        createdAt: tweet.createdAt.toISOString(),
+        images: tweetData.images ? JSON.parse(tweetData.images) : [],
+        location: tweetData.location || null,
+        hashtags: tweetData.hashtags ? JSON.parse(tweetData.hashtags) : [],
+        mentions: tweetData.mentions ? JSON.parse(tweetData.mentions) : [],
+      }
+    })
 
     return NextResponse.json(tweetsWithStringDates)
   } catch (error) {
