@@ -1,65 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma, withRetry } from '@/lib/prisma'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    // Timeout promise
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Database timeout')), 8000) // 8 seconds
+    const tweets = await withRetry(async () => {
+      return await prisma.tweet.findMany({
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              image: true,
+              verified: true,
+              badges: true,
+            },
+          },
+          likes: {
+            select: {
+              id: true,
+              userId: true,
+            },
+          },
+          retweets: {
+            select: {
+              id: true,
+              userId: true,
+            },
+          },
+          replies: {
+            select: {
+              id: true,
+              userId: true,
+            },
+          },
+          _count: {
+            select: {
+              likes: true,
+              retweets: true,
+              replies: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: 50,
+      })
     })
-
-    // Database query promise
-    const queryPromise = prisma.tweet.findMany({
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            image: true,
-            verified: true,
-            badges: true,
-          },
-        },
-        likes: {
-          select: {
-            id: true,
-            userId: true,
-          },
-        },
-        retweets: {
-          select: {
-            id: true,
-            userId: true,
-          },
-        },
-        replies: {
-          select: {
-            id: true,
-            userId: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
-            retweets: true,
-            replies: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 50,
-    })
-
-    // Race between timeout and query
-    const tweets = await Promise.race([queryPromise, timeoutPromise]) as any[]
 
     // JSON alanları parse et
     const tweetsWithParsedData = tweets.map((tweet) => ({
@@ -78,10 +71,13 @@ export async function GET() {
   } catch (error) {
     console.error('Tweets getirme hatası:', error)
     
-    // Connection error handling
-    if (error instanceof Error && error.message.includes('too many connections')) {
+    // Database connection error handling
+    if (error instanceof Error && (
+      error.message.includes('Database connection failed') ||
+      error.message.includes('too many connections')
+    )) {
       return NextResponse.json(
-        { error: 'Veritabanı meşgul, lütfen birkaç saniye sonra tekrar deneyin' },
+        { error: 'Veritabanı geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin.' },
         { status: 503 }
       )
     }

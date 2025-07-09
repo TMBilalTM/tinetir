@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma, withRetry } from '@/lib/prisma'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -19,46 +19,50 @@ export async function GET() {
     }
 
     // Şu anda takip ettiği kullanıcıları al
-    const following = await prisma.follow.findMany({
-      where: { followerId: session.user.id },
-      select: { followingId: true },
+    const following = await withRetry(async () => {
+      return await prisma.follow.findMany({
+        where: { followerId: session.user.id },
+        select: { followingId: true },
+      })
     })
 
     const followingIds = following.map(f => f.followingId)
     followingIds.push(session.user.id) // Kendisini de hariç tut
 
     // En aktif kullanıcıları al (en çok tweet atan)
-    const suggestedUsers = await prisma.user.findMany({
-      where: {
-        id: {
-          notIn: followingIds,
-        },
-      },
-      select: {
-        id: true,
-        name: true,
-        username: true,
-        image: true,
-        _count: {
-          select: {
-            tweets: true,
-            followers: true,
+    const suggestedUsers = await withRetry(async () => {
+      return await prisma.user.findMany({
+        where: {
+          id: {
+            notIn: followingIds,
           },
         },
-      },
-      orderBy: [
-        {
-          followers: {
-            _count: 'desc',
+        select: {
+          id: true,
+          name: true,
+          username: true,
+          image: true,
+          _count: {
+            select: {
+              tweets: true,
+              followers: true,
+            },
           },
         },
-        {
-          tweets: {
-            _count: 'desc',
+        orderBy: [
+          {
+            followers: {
+              _count: 'desc',
+            },
           },
-        },
-      ],
-      take: 8,
+          {
+            tweets: {
+              _count: 'desc',
+            },
+          },
+        ],
+        take: 8,
+      })
     })
 
     // Kullanıcı verilerini formatlayalım
@@ -74,6 +78,18 @@ export async function GET() {
     return NextResponse.json(formattedUsers)
   } catch (error) {
     console.error('Suggested users hatası:', error)
+    
+    // Database connection error handling
+    if (error instanceof Error && (
+      error.message.includes('Database connection failed') ||
+      error.message.includes('too many connections')
+    )) {
+      return NextResponse.json(
+        { error: 'Veritabanı geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin.' },
+        { status: 503 }
+      )
+    }
+    
     return NextResponse.json(
       { error: 'Önerilen kullanıcılar getirilemedi' },
       { status: 500 }
