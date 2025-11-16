@@ -1,129 +1,169 @@
 # 𝕏 Twitter Clone
 
-Bu proje, Twitter/X'in tam bir klonudur. Next.js, TypeScript, Prisma ve Tailwind CSS kullanılarak geliştirilmiştir.
+A fully functional, modern Twitter/X clone built with **Next.js**, **TypeScript**, **Prisma**, and **Tailwind CSS**.  
+Designed to replicate the core experience of X — fast, responsive, and real-time.
 
-## 🚀 Özellikler
+## 🚀 Features
 
-- ✅ Kullanıcı kaydı ve giriş sistemi (NextAuth.js)
-- ✅ Tweet oluşturma, düzenleme ve silme
-- ✅ Beğeni ve retweet sistemi
-- ✅ Gerçek zamanlı tweet akışı
-- ✅ Kullanıcı profilleri ve takip sistemi
-- ✅ Responsive tasarım (mobil uyumlu)
-- ✅ Twitter/X benzeri arayüz ve UX
-- ✅ Ücretsiz açık kaynak kütüphaneler
+- 🔐 **User Authentication** (NextAuth.js)
+- 📝 **Create / Edit / Delete Tweets**
+- ❤️ **Likes** & 🔁 **Retweets**
+- 💬 **Replies & Thread System**
+- 👤 **User Profiles**
+- ➕ **Follow / Unfollow**
+- ⚡ **Real-time Feed Updates**
+- 📱 **Fully Responsive UI**
+- 🎨 **Twitter-like UI/UX**
+- 🌐 **Open-source friendly**
 
-## 🛠️ Teknolojiler
+## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
-- **Veritabanı**: Prisma ORM + SQLite (geliştirme) / PostgreSQL (prodüksiyon)
-- **Authentication**: NextAuth.js
-- **State Management**: React Context
-- **İkonlar**: Lucide React
-- **Form Yönetimi**: React Hook Form + Zod
-- **Tarih**: date-fns
+### **Frontend**
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
 
-## 📦 Kurulum
+### **Backend**
+- Prisma ORM  
+- SQLite (development) / PostgreSQL (production)
 
-1. Depoyu klonlayın:
+### **Auth**
+- NextAuth.js
+
+### **State Management**
+- React Context
+
+### **Other**
+- React Hook Form + Zod  
+- Lucide Icons  
+- date-fns  
+
+---
+
+## 📦 Installation
+
+### 1. Clone the repository
 ```bash
 git clone <repository-url>
 cd tinetir
 ```
 
-2. Bağımlılıkları yükleyin:
+### 2. Install dependencies
 ```bash
 npm install
 ```
 
-3. Ortam değişkenlerini ayarlayın:
+### 3. Set environment variables
+Create a **.env** file:
 ```bash
-# .env dosyasında
 DATABASE_URL="file:./dev.db"
 NEXTAUTH_SECRET="your-secret-key-here"
 NEXTAUTH_URL="http://localhost:3000"
 ```
 
-4. Veritabanını oluşturun:
+### 4. Set up the database
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-5. Geliştirme sunucusunu başlatın:
+### 5. Start development server
 ```bash
 npm run dev
 ```
 
-6. Tarayıcınızda [http://localhost:3000](http://localhost:3000) adresini açın.
-
-## 🎯 Kullanım
-
-1. **Hesap Oluşturma**: `/auth/signup` sayfasından yeni hesap oluşturun
-2. **Giriş Yapma**: `/auth/signin` sayfasından giriş yapın
-3. **Tweet Atma**: Ana sayfada tweet composer'ı kullanarak tweet atın
-4. **Etkileşim**: Tweet'leri beğenin, retweet yapın ve yanıtlayın
-5. **Keşfet**: Sağ sidebar'dan gündem ve önerilen kullanıcıları görün
-
-## 📁 Proje Yapısı
-
-```
-src/
-├── app/                    # Next.js App Router
-│   ├── api/               # API route'ları
-│   ├── auth/              # Authentication sayfaları
-│   └── globals.css        # Global stiller
-├── components/            # React bileşenleri
-│   ├── layout/           # Layout bileşenleri
-│   ├── tweet/            # Tweet ile ilgili bileşenler
-│   └── providers/        # Context provider'ları
-├── lib/                  # Utility fonksiyonları
-│   ├── auth.ts          # NextAuth konfigürasyonu
-│   └── prisma.ts        # Prisma client
-└── types/               # TypeScript tip tanımları
-```
-
-## 🗄️ Veritabanı Modeli
-
-- **User**: Kullanıcı bilgileri
-- **Tweet**: Tweet içerikleri
-- **Like**: Beğeni ilişkileri
-- **Retweet**: Retweet ilişkileri
-- **Reply**: Yanıt sistemi
-- **Follow**: Takip sistemi
-
-## 🚀 Deployment
-
-### Vercel (Önerilen)
-
-1. GitHub'a push yapın
-2. Vercel'e bağlayın
-3. Ortam değişkenlerini ayarlayın
-4. PostgreSQL veritabanı ekleyin
-
-### Diğer Platformlar
-
-- Railway
-- PlanetScale
-- Heroku
-- Netlify
-
-## 🤝 Katkıda Bulunma
-
-1. Fork yapın
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Commit yapın (`git commit -m 'Add amazing feature'`)
-4. Branch'i push yapın (`git push origin feature/amazing-feature`)
-5. Pull Request açın
-
-## 📝 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır.
-
-## 📞 İletişim
-
-Proje ile ilgili sorularınız için issue açabilirsiniz.
+Now visit:  
+➡️ **http://localhost:3000**
 
 ---
 
-⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
+## 🎯 Usage Guide
+
+- 🆕 Sign up via **/auth/signup**  
+- 🔑 Log in using **/auth/signin**  
+- 📝 Post tweets from the Home feed  
+- ❤️ Interact with tweets (like, retweet, reply)  
+- 🙋 View profiles & follow other users  
+- 📊 Explore trending topics on the right sidebar  
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── app/
+│   ├── api/               # API routes
+│   ├── auth/              # Auth pages
+│   └── globals.css        # Global styles
+├── components/
+│   ├── layout/            # Layout components
+│   ├── tweet/             # Tweet UI components
+│   └── providers/         # Context providers
+├── lib/
+│   ├── auth.ts            # NextAuth config
+│   └── prisma.ts          # Prisma client
+└── types/                 # TypeScript types
+```
+
+---
+
+## 🗄️ Database Models
+
+- **User** — Profile info, username, avatar  
+- **Tweet** — Main tweet content  
+- **Like** — Relationship table for likes  
+- **Retweet** — Retweet records  
+- **Reply** — Reply/Thread system  
+- **Follow** — Follower/following relationships  
+
+---
+
+## 🚀 Deployment
+
+### **Vercel (Recommended)**
+1. Push your repo to GitHub  
+2. Import the project on Vercel  
+3. Add environment variables  
+4. Use Vercel PostgreSQL  
+
+### Other Platforms  
+- Railway  
+- PlanetScale  
+- Render  
+- Netlify (with serverless functions)  
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repo  
+2. Create a feature branch  
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. Commit your changes  
+   ```bash
+   git commit -m "Add amazing feature"
+   ```
+4. Push your branch  
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+5. Submit a Pull Request  
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 📞 Contact
+
+For questions or feedback, feel free to open an issue.
+
+---
+
+⭐ If you like this project, consider giving it a star!
